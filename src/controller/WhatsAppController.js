@@ -10,11 +10,31 @@ export class WhatsAppController {
 
         console.log('WhatsAppController ok');
 
+        this._firebase = new Firebase();
+        this.initAuth();
         this.elementPrototype();
         this.loadElements();
         this.initEvents();
-        this._firebase = new Firebase();
+        
 
+
+    }
+
+    initAuth(){
+
+        this._firebase.initAuth().then(response=>{
+
+            this._user = response.user;
+            
+            this.el.appContent.css({
+                display:'flex'
+            });
+
+        }).catch(err=>{
+
+            console.error(err);
+
+        });
 
     }
 

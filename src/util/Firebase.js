@@ -1,10 +1,12 @@
+//import * as firebase from 'firebase'
+//import * as firestore from 'firebase/firestore'
+
 const firebase = require('firebase');
 require('firebase/firestore');
 
 
 
-//import * as firebase from 'firebase'
-//import * as firestore from 'firebase/firestore'
+
 
 export class Firebase {
 
@@ -35,6 +37,29 @@ export class Firebase {
             window._initializedFirebase = true;
 
         }
+
+    }
+
+    initAuth(){
+
+        return new Promise((s,f)=>{
+
+            let provider = new firebase.auth.GoogleAuthProvider();
+
+            firebase.auth().singInWithPopup(provider).then(result=>{
+
+                let token = result.credential.accessToken;
+                let user = result.user;
+
+                s({user,token});
+
+            }).cath(err=>{
+
+                f(err);
+
+            })
+
+        });
 
     }
 
