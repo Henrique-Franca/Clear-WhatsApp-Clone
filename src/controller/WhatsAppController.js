@@ -5,7 +5,7 @@ import {DocumentPreviewController} from './DocumentPreviewController';
 import {Firebase} from './../util/Firebase';
 import { User } from './../model/User';
 import { Chat } from '../model/Chat';
-import { Message } from '../model/Message';
+import { Menssage, Message } from '../model/Message';
 
 export class WhatsAppController {
 
@@ -502,7 +502,9 @@ export class WhatsAppController {
 
             [...this.el.inputPhoto.files].forEach(file=>{
 
-                console.log(file);
+                Menssage.sendImage(this._contactActive.chatId,this._user.email,file);
+
+                
 
             });
 
