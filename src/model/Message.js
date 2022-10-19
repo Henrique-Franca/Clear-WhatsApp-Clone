@@ -49,6 +49,7 @@ export class Menssage extends Model{
 
         let div = document.createElement('div');
 
+        div.id = `_${this.id}`;
         div.className = 'message';
 
         switch (this.type){
@@ -76,7 +77,7 @@ export class Menssage extends Model{
                                 </div>
                             </div>
                             <div class="_1lC8v">
-                                <div dir="ltr" class="_3gkvk selectable-text invisible-space copyable-text">Nome do Contato Anexado</div>
+                                <div dir="ltr" class="_3gkvk selectable-text invisible-space copyable-text">${this.contact.name}</div>
                             </div>
                             <div class="_3a5-b">
                                 <div class="_1DZAH" role="button">
@@ -92,6 +93,21 @@ export class Menssage extends Model{
 
                 </div>
                 `;
+
+                if(this.content.photo){
+
+                    let img = div.querySelector('.photo-contact-sended');
+                    img.src = this.content.photo;
+                    img.show();
+
+                }
+
+                div.querySelector('.btn-message-send').on('click', e =>{
+
+                    console.log('enviar mensagem');
+
+                });
+
             break;
 
             case 'image':
@@ -281,7 +297,7 @@ export class Menssage extends Model{
 
             default:
                 div.innerHTML = `
-                <div class="font-style _3DFk6 tail" id="_${this.id}">
+                <div class="font-style _3DFk6 tail" >
                     <span class="tail-container"></span>
                     <span class="tail-container highlight"></span>
                     <div class="Tkt2p">
@@ -337,6 +353,12 @@ export class Menssage extends Model{
             });
 
         });
+
+    }
+
+    static sendCoontact(chatId,from,contact){
+
+        return Message.send(chatId,from, 'contact', contact);
 
     }
 
