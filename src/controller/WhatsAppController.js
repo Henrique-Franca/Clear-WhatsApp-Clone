@@ -5,7 +5,8 @@ import {DocumentPreviewController} from './DocumentPreviewController';
 import {Firebase} from './../util/Firebase';
 import { User } from './../model/User';
 import { Chat } from '../model/Chat';
-import { Menssage, Message } from '../model/Message';
+import { Menssage } from '../model/Message';
+import { Base64 } from "../ultil/Base64";
 
 export class WhatsAppController {
 
@@ -224,7 +225,15 @@ export class WhatsAppController {
 
                     this.el.panelMessagesContainer.appendChild(view);
                    
-                }else if(me){
+                }else {
+
+                    let view = message.getViewElement(me);
+
+                    this.el.panelMessagesContainer.querySelector('#_' + data.id).innerHTML = view.innerHTML;
+
+                }
+                
+                if(this.el.panelMessagesContainer.querySelector('#_' + data.id) && me){
 
                     let msgEl = this.el.panelMessagesContainer.querySelector('#_' + data.id);  
                     
@@ -579,24 +588,24 @@ export class WhatsAppController {
                 context.drawImage(picture, 0, 0, canvas.width, canvas.height);
 
                 fetch(canvas.toDataURL(mimeType))
-                .then(res => {return res.arrayBuffer();})
-                .then(buffer => { return new File([buffer], filename, { type: mimeType }); })
-                .then(file =>{
+                    .then(res => {return res.arrayBuffer();})
+                    .then(buffer => { return new File([buffer], filename, { type: mimeType }); })
+                    .then(file =>{
 
-                Message.sendImage(this._contactActive.chatId, this._user.email, file);
+                    Message.sendImage(this._contactActive.chatId, this._user.email, file);
 
-                this.el.btnSendPicture.disabled = false;
+                    this.el.btnSendPicture.disabled = false;
 
-                this.closeAllMainPanel();
-                this._camera.stop();
-                this.el.btnReshootPanelCamera.hide();
-                this.el.pictureCamera.hide();
-                this.el.videoCamera.show();
-                this.el.containerSendPicture.hide();
-                this.el.containerTakePicture.show();
-                this.el.panelMessagesContainer.show();
+                    this.closeAllMainPanel();
+                    this._camera.stop();
+                    this.el.btnReshootPanelCamera.hide();
+                    this.el.pictureCamera.hide();
+                    this.el.videoCamera.show();
+                    this.el.containerSendPicture.hide();
+                    this.el.containerTakePicture.show();
+                    this.el.panelMessagesContainer.show();
             
-            });
+                });
 
             }
 
@@ -684,7 +693,30 @@ export class WhatsAppController {
 
         this.el.btnSendDocument.on('click', e=>{
 
-            console.log('send documet');
+            let file = this.el.inputDocument.files[0];
+            let base64 = this.el.imgPanelDocumentPreview.src;
+
+            if(file.type === 'application/pdf'){
+
+                Base64.toFile(preview).then(filePreview =>{
+
+                    Message.sendDocument(this._contactActive.chatId,
+                        this._user.email, file, base64,
+                        this.el.infoPanelDocumentPreview.innerHTML);
+                });
+
+            }else{
+
+                Message.sendDocument(this._contactActive.chatId,
+                    this._user.email, file,);
+
+            }
+
+            this.el.btnClosePanelDocumentPreview.click();
+
+
+
+
 
         });
 
