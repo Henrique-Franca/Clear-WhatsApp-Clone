@@ -8,6 +8,8 @@ import { Chat } from '../model/Chat';
 import { Menssage } from '../model/Message';
 import { Base64 } from "../ultil/Base64";
 import { ContactsController } from '../controller/ContactsController';
+import { Upload } from '../util/Upload';
+import { SnapshotMetadata } from '@firebase/firestore';
 
 export class WhatsAppController {
 
@@ -445,6 +447,27 @@ export class WhatsAppController {
         this.el.photoContainerEditProfile.on('click', e=>{
 
             this.el.inputProfilePhoto.click();
+
+        });
+
+        this.el.inputProfilePhoto.on('change',e=>{
+
+            if(this.el.inputProfilePhoto.files.length > 0){
+
+                let file = this.el.inputProfilePhoto.files[0];
+
+                Upload.send(file, this._user.email).then(snapshot=>{
+
+                    this._user.photo = snapshot.downloadURL;
+                    this._user.save().then(()=>{
+
+                        this.el.btnClosePanelEditProfile.click();
+
+                    });
+
+                });
+
+            }
 
         });
 

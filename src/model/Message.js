@@ -1,6 +1,7 @@
 import { Dict } from "pdfjs-dist/build/pdf.worker";
 import { Firebase } from "../util/Firebase";
 import { Format } from "../util/Format";
+import { Upload } from "../util/Upload";
 import { Model } from "./Model";
 
 
@@ -416,25 +417,7 @@ export class Menssage extends Model{
 
     static upload(file, from){
 
-        return new Promise((s,f)=>{
-
-            let uploadTask = Firebase.hd().ref(from).child(Date.now() + '_' + file.name).put(file);
-
-            uploadTask.on('state_changed', e=>{
-    
-                console.info('upload', e);
-    
-            },err=>{
-    
-                f(err);
-    
-            },()=>{
-    
-               s(uploadTask.snapshot);
-    
-            });
-
-        });
+        return Upload.send(file, from);
 
     }
 
