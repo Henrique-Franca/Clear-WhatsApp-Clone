@@ -78,8 +78,6 @@ export class WhatsAppController {
 
     initContacts(){
 
-       
-
         this._user.on('contactschange', docs=>{
 
             this.el.contactsMessagesList.innerHTML = '';
@@ -113,7 +111,7 @@ export class WhatsAppController {
                             <span dir="auto" title="${contact.name}" class="_1wjpf">${contact.name}</span>
                         </div>
                         <div class="_3Bxar">
-                            <span class="_3T2VG">${contact.lastMenssageTime}</span>
+                            <span class="_3T2VG">${Format.timeStampTotime(contact.lastMenssageTime)}</span>
                         </div>
                     </div>
                     <div class="_1AwDx">
